@@ -3,10 +3,10 @@ class Player {
   PVector vel;
   PVector acc;
   Brain brain;
-   game;
+  import Thing;
+  import Game;
 
   boolean dead = false;
-  boolean reachedGoal = false;
   boolean isBest = false;//true if this dot is the best dot from the previous generation
 
   float fitness = 0;
@@ -68,7 +68,7 @@ class Player {
   //--------------------------------------------------------------------------------------------------------------------------------------
   //calculates the fitness
   void calculateFitness() {
-    fitness = game.time;
+    fitness = time;
     }
   }
 
