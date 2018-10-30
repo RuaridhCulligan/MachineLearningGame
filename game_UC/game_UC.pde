@@ -26,8 +26,11 @@ class player {
   }
 }
 
+void settings() {
+  fullscreen();
+}
+
 void setup() {//setup (duh)
-  size(800, 800);
   background(255);
   for (int i = 0; i < meteors.length; i++) {
     meteors[i] = new meteor(); // Create each object
