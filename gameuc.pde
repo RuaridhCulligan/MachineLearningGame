@@ -8,31 +8,39 @@ float n1posY = pposY - 70;
 float pdirX = 3;
 float pdirY = 3;
 float pspeed = 1;
-player[] playerN = new player[0];
+int nPlayers = 0;
+float pWidth = 20;
+player[] players = new player[nPlayers];
 boolean mousePressedv = false;
 int noMeteors=4;
 int noLasers = 4;
 int noCoins = 2;
-player player;
 meteor[] meteors = new meteor[noMeteors];
 laser[] lasers = new laser[noLasers];
 coin[] coins = new coin[noCoins];
+PImage coinImg;
+PImage meteorImageCurr;
+int nMimgs = 3;
+PImage[] meteorImages = new PImage[nMimgs];
+int currScore;
+float widthAct = width -100;
+int selectedImage;
+player playerE = new player(pposX);
 ArrayList<String> arrObj = new ArrayList<String>();
 
-
-class player {
-  void movePlayer(){
-    fill(0);
-    rect(mouseX, pposY, 20, -50);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-  rect(mouseX +7, n1posY, 5, 20);
-  }
-}
 
 
 
 void setup() {//setup (duh)
   background(255);
-  size(800, 800);
+  currScore =0;
+  coinImg = loadImage("meteor2.png");
+  meteorImageCurr = loadImage("meteor0png");
+  size(900, 800);
+  for (int p =0; p< meteorImages.length; p++){
+    meteorImages[p] = loadImage("meteor" +p+".png");
+    }
+ 
   for (int i = 0; i < meteors.length; i++) {
     meteors[i] = new meteor(); // Create each object
     arrObj.add(meteors[i].nameM);
@@ -42,9 +50,7 @@ void setup() {//setup (duh)
     lasers[j] = new laser();
     arrObj.add(lasers[j].nameL);
   }
-  for (int k = 0; k<playerN.length;k++){
-    playerN[k] = new player();
-  }
+  
   for (int c=0;c<coins.length;c++){
     coins[c] = new coin();
     arrObj.add(coins[c].nameC);
@@ -58,12 +64,11 @@ void draw(){//drawing the stuff
   stroke(0);
   strokeWeight(3);
   fill(0);
-  rect(mouseX, pposY, 20, -50);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-  rect(mouseX +7, n1posY, 5, 20);
+  playerE.update();
+  text("Score: "+currScore, 10, 10);
   line(gposX, gposY, gposX + width, gposY);
-  for (int k=0; k<playerN.length;k++){
-    playerN[k].movePlayer();
-  }
+  println(arrObj);
+  
     for (int i = 0; i < meteors.length; i++) {
     meteors[i].fall();
      }
@@ -73,16 +78,42 @@ void draw(){//drawing the stuff
      for (int c=0;c<coins.length;c++){
        coins[c].fall();
      }
+     for (int v =0; v<meteors.length; v++){
+       if (meteors[v].radiusRandom < 90){
+         selectedImage = 1;
+       } else if (meteors[v].radiusRandom >=90){
+         selectedImage =0;
+       }
+     if (meteors[v].destroyed==true){
+       selectedImage =2;
+     }meteors[v].fall();
+       }
     }
-    
-    
 
+class player {
+  float pY = gposY;
+  float pX = mouseX;
+  float pXpos;
+  float pYpos;
+  String nameP = "player";
+  player(float pX) {
+    pXpos = pX;
+  }
+  
+  void update() {
+    rect(mouseX, pposY, pWidth, -70);
+  }
+  
+  void kill(){
+    
+  }
+  }
 class laser {
   float pposY = gposY;
 float n1posY = pposY - 70;
   float lX = 0;
   float lY = n1posY-50;
-  float ldY = -12;
+  float ldY = -20;
   String nameL = "laser";
   void mousePressed() {
   mousePressedv = true;
@@ -105,16 +136,19 @@ float n1posY = pposY - 70;
   }
   
 }
+
+
 class coin {
   float cX = random(width);
-  float coinRadius = 20;
+  float coinRadius = 70;
   String nameC = "coin";
   float cY = random(-height);
   void fall() {
-      cY = cY +random(1, 12);
+      cY = cY +4;
       fill(189);
-      ellipse(cX,cY, coinRadius, coinRadius);
-      
+      //ellipse(cX,cY, coinRadius, coinRadius);
+      imageMode(CENTER);
+      image(coinImg, cX, cY, coinRadius, coinRadius);
       if (cY>gposY - coinRadius){
        cX = random(width);
        cY = random(-coinRadius);
@@ -122,22 +156,27 @@ class coin {
   }
 }
 class meteor{
+ 
   float mX = random(width);
-  float radiusRandom = random(30, 120);
+  float radiusRandom = random(50, 130);
   String nameM = "meteor";
+  boolean destroyed;
   
     float mY = random(-height);
+   
      void fall(){
-       mY = mY +random(1, 12);
+       
+       mY = mY +3;
        fill(229, 175, 57);
-       ellipse(mX, mY, radiusRandom, radiusRandom);
-     
+       //ellipse(mX, mY, radiusRandom, radiusRandom);
+       image(meteorImages[selectedImage], mX, mY, radiusRandom, radiusRandom);
        if (mY>gposY-radiusRandom){
          mX = random(width);
          mY = random(-radiusRandom);
-       }
      }
-}
+}}
+
+
 
 void mousePressed() {
   mousePressedv = true;
