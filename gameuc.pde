@@ -12,6 +12,7 @@ int nPlayers = 0;
 float pWidth = 20;
 player[] players = new player[nPlayers];
 boolean mousePressedv = false;
+boolean keyReleasedv= false;
 int noMeteors=4;
 int noLasers = 4;
 int noCoins = 2;
@@ -21,6 +22,7 @@ coin[] coins = new coin[noCoins];
 PImage coinImg;
 PImage meteorImageCurr;
 int nMimgs = 3;
+PImage playerImageCurr;
 PImage[] meteorImages = new PImage[nMimgs];
 int currScore;
 float widthAct = width -100;
@@ -35,7 +37,7 @@ void setup() {//setup (duh)
   background(255);
   currScore =0;
   coinImg = loadImage("meteor2.png");
-  meteorImageCurr = loadImage("meteor0png");
+  meteorImageCurr = loadImage("meteor0.png");
   size(900, 800);
   for (int p =0; p< meteorImages.length; p++){
     meteorImages[p] = loadImage("meteor" +p+".png");
@@ -67,7 +69,7 @@ void draw(){//drawing the stuff
   playerE.update();
   text("Score: "+currScore, 10, 10);
   line(gposX, gposY, gposX + width, gposY);
-  println(arrObj);
+  
   
     for (int i = 0; i < meteors.length; i++) {
     meteors[i].fall();
@@ -79,9 +81,9 @@ void draw(){//drawing the stuff
        coins[c].fall();
      }
      for (int v =0; v<meteors.length; v++){
-       if (meteors[v].radiusRandom < 90){
+       if (meteors[v].radiusRandom < 120){
          selectedImage = 1;
-       } else if (meteors[v].radiusRandom >=90){
+       } else if (meteors[v].radiusRandom >=120){
          selectedImage =0;
        }
      if (meteors[v].destroyed==true){
@@ -101,7 +103,13 @@ class player {
   }
   
   void update() {
-    rect(mouseX, pposY, pWidth, -70);
+    if (key==CODED){
+      if (keyCode == RIGHT){
+        pposX = pposX + 5;
+      }else if (keyCode == LEFT){
+        pposX = pposX -5;
+      }
+    }rect(pposX, pposY, pWidth, -70);
   }
   
   void kill(){
@@ -118,20 +126,26 @@ float n1posY = pposY - 70;
   void mousePressed() {
   mousePressedv = true;
 }
+void keyReleased() {
+ keyReleasedv= true;
+}
   
   void shoot(){
     
       if (lY == n1posY-62){
-        lX = mouseX;
+        lX = pposX;
       }
       lY = lY + ldY;
       ellipse(lX, lY, 10, 10);
       if (lY <=10){
-        if (mousePressedv){
-          mousePressedv = false;
+        
+        if (key == ENTER){
+          if (keyReleasedv == false){
+           
         lY = n1posY -62;
         lX =0;
-      }
+        keyReleasedv= false;
+      }}
       }
   }
   
@@ -158,7 +172,7 @@ class coin {
 class meteor{
  
   float mX = random(width);
-  float radiusRandom = random(50, 130);
+  float radiusRandom = random(95, 170);
   String nameM = "meteor";
   boolean destroyed;
   
@@ -175,8 +189,6 @@ class meteor{
          mY = random(-radiusRandom);
      }
 }}
-
-
 
 void mousePressed() {
   mousePressedv = true;
