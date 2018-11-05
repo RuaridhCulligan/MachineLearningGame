@@ -7,7 +7,7 @@ for i = 0 to length(item_list) - 1
   if item = laser
     for i = 0 length(item_list) - 1
       if item = meteor 
-        if laser.frameYR > meteor.frameY and (laser.frameX < meteor.frameX +(meteorL/2) or  laser.frameX > meteor.frameX -(meteorL/2))
+        if laser.frameY > meteor.frameY and (laser.frameX < meteor.frameX +(meteorL/2) or  laser.frameX > meteor.frameX -(meteorL/2))
           remove(meteor)
         end if
       end if
@@ -15,7 +15,7 @@ for i = 0 to length(item_list) - 1
   else if item = meteor
     for i = 0 length(item_list) - 1
       if item = player
-        if meteor.frameYR < player.frameY and (meteor.frameX < player.frameX +(playerL/2) or  meteor.frameX > player.frameX -(meteorL/2))
+        if meteor.frameY < player.frameY and (meteor.frameX < player.frameX +(playerL/2) or  meteor.frameX > player.frameX -(meteorL/2))
           remove(player)
         end if
       end if
